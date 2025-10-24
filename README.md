@@ -20,7 +20,7 @@ A fun, smooth, and glowing **Tic Tac Toe** game built using **HTML, CSS, and van
 
 ### 🖼️ Preview
 
-`![Screenshot](./Tc-Tac-Toe/Tic-Tac-Toe_screenshot.png)`
+`![Screenshot](./Tic-Tac-Toe/tic-tac-toe_screenshot.png)`
 
 
 
