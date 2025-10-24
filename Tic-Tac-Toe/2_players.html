@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>2 Players Game</title>
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:"orbitron",serif;
+}
+body {
+
+    background-color:#240000; /*Red Shade*/
+    min-height: 100vh;
+    opacity: 0;
+    transition: background-color 3s ease;
+    animation: fade_in 2.5s ease-in forwards;
+}
+@keyframes fade_in {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.player_turn {
+    margin: 20px;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    letter-spacing: 3px;
+    font-weight: 900;
+    color: #ffd700;
+   
+}
+
+.game_container {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.game_grid {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 380px;
+    width: 380px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /*top: 50% and left: 50% makes the left top corner at the center
+    translate(50%,50%) moves half of it's own width and height back up and left.*/
+    transform: translate(-50%,-42%);
+    gap: 10px;
+}
+
+.cell {
+    margin: 10px;
+    position: relative;
+    width: 100px;
+    height: 100px;
+
+} 
+.cell.no_element {
+    border-radius: 12px;
+}
+.cell.no_element.x_turn:hover {
+    border: 1px solid rgb(158, 78, 78);
+    cursor: pointer;
+}
+.cell.no_element.o_turn:hover {
+    border: 1px solid rgb(78, 93, 158);
+    cursor: pointer;
+}
+svg {
+    position: absolute;
+    /*If border is removed, the layout of the grid changes*/
+    border: 5px solid transparent;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    z-index: -1;
+
+}
+
+.particles span {
+    position: absolute;
+    /*Even though, display:block, we can set it's height and width explicitly. 
+    Diff b/w inline-block and block element is, block element starts on a new line*/
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: #ffffff;
+    box-shadow: 0px 0px 5px 1px white;
+    z-index: -1;
+    animation: float 10s linear infinite;
+
+}
+.particles span:nth-child(1) {
+    top: 10%;
+    left: 20%;
+    animation-duration: 12s;
+}
+.particles span:nth-child(2) {
+    top: 20%;
+    left: 50%;
+    animation-duration: 15s;
+}
+.particles span:nth-child(3) {
+    top: 30%;
+    left: 80%;
+    animation-duration: 8s;
+}
+.particles span:nth-child(4) {
+    top: 40%;
+    left: 90%;
+    animation-duration: 17s;
+}
+.particles span:nth-child(5) {
+    top: 50%;
+    left: 10%;
+    animation-duration: 11s;
+}
+.particles span:nth-child(6) {
+    top: 60%;
+    left: 20%;
+    animation-duration: 10s;
+}
+.particles span:nth-child(7) {
+    top: 70%;
+    left: 20%;
+    animation-duration: 18s;
+}
+.particles span:nth-child(8) {
+    top: 80%;
+    left: 60%;
+    animation-duration: 14s;
+}
+.particles span:nth-child(9) {
+    top: 90%;
+    left: 80%;
+    animation-duration: 16s;
+}
+.particles span:nth-child(10) {
+    top: 100%;
+    left: 60%;
+    animation-duration: 9s;
+}
+.particles span:nth-child(11) {
+    top: 15%;
+    left: 60%;
+    animation-duration: 13s;
+}
+.particles span:nth-child(12) {
+    top: 25%;
+    left: 90%;
+    animation-duration: 12s;
+}
+.particles span:nth-child(13) {
+    top: 35%;
+    left: 20%;
+    animation-duration: 20s;
+}
+.particles span:nth-child(14) {
+    top: 45%;
+    left: 30%;
+    animation-duration: 19s;
+}
+.particles span:nth-child(15) {
+    top: 90%;
+    left: 10%;
+    animation-duration: 17s;
+}
+.particles span:nth-child(16) {
+    top: 10%;
+    left: 10%;
+    animation-duration: 11s;
+}
+.particles span:nth-child(17) {
+    top: 90%;
+    left: 90%;
+    animation-duration: 12s;
+}
+@keyframes float {
+    0% {transform: translateY(0) translateX(0);opacity: 0.4;}
+    50% {transform: translateY(-50px) translateX(20px); opacity: 0.6;}
+    100% {transform: translateY(0) translateX(0); opacity: 0.4;}
+}
+
+.x_mark, .o_mark {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.x_mark line {
+    stroke: #ff004c;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dashoffset: 120;
+    stroke-dasharray: 120;
+    /*First Drop Shadow is for: Outer Glow; Second Drop Shadow is for Core */
+    filter: drop-shadow(0 0 7px #ff004c) drop-shadow(0 0 1px #b60037);
+    animation: draw_x 0.8s ease-out forwards;
+}
+
+.x_mark line:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+@keyframes draw_x {
+    0% {stroke-dashoffset :120;}
+    100% {stroke-dashoffset: 0;}
+}
+
+.o_mark circle {
+    stroke: #00bfff;
+    stroke-width: 10;
+    fill: none;
+    stroke-dasharray: 189;
+    stroke-dashoffset: 189; /*2 x 3.14 x 30 ~ 189; (r = 30)*/
+    filter: drop-shadow(0 0 6px #00bfff) drop-shadow(0 0 1px #0092b6);
+    animation: draw_o 1.3s ease-out forwards;
+    transform: rotate(90deg) rotateY(180deg);
+    transform-origin: 50% 50%;
+}
+
+@keyframes draw_o {
+    0% {stroke-dashoffset: 189;} 
+    100% {stroke-dashoffset: 0;}
+}
+.winning_line {
+    position: relative;
+    height: 5px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 10;
+    background-color: #39ff14;
+    filter: drop-shadow(0 0 10px #39ff14) drop-shadow(0 0 10px #1f800b);
+}
+.winning_line.active {
+    transform: scaleX(1);
+}
+
+.play_again {
+    position: absolute;
+    left: 85%;
+    top: 50%;
+    background-image:linear-gradient(to right,#ff3366,#00bfff);
+    color: white;
+    width: 160px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 20px;
+    animation: opacity_button 2s forwards;
+    border-radius: 10%;
+    letter-spacing: 2px;
+    display: none;
+    
+}
+.play_again:hover {
+    box-shadow: 0 0 15px #00bfff;
+    transform: scale(1.05);
+    transition: 0.3s;
+}
+</style>
+<body>
+    <div class="particles">
+        <!-- 17 particles -->
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <p class="player_turn">Player X's Turn</p>
+    
+    <div class="game_container">
+        <div class="winning_line"></div>
+        <div class="game_grid">
+            <div class="cell no_element x_turn" data-cell-index="1" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="2" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="3" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="4" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="5" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="6" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="7" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="8" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="9" onclick="cell_clicked(this)"></div>
+        </div>
+    </div>
+
+    <svg width="600" height="600">
+        <!-- line: x1,y1: Start of the line; x2,y2: End of the line -->
+        <line x1="80" y1="231" x2="510" y2="231" stroke="white" stroke-width="15" />
+        <line x1="80" y1="358" x2="510" y2="358" stroke="white" stroke-width="15" />
+        <line x1="232" y1="80" x2="232" y2="508" stroke="white" stroke-width="15" />
+        <line x1="358" y1="80" x2="358" y2="508" stroke="white" stroke-width="15" />
+
+        <!-- triangle is constructed using polygon: points: x1,y1, x2,y2, x3,y3
+        x1,y1 -> Top Vertex; x2,y2 -> Bottom Left Vertex; x3,y3 -> Bottom Right Vertex -->
+        <polygon points = "232,40,  224.5,80,  239.5,80" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "357,40,  350.5,80,  365.5,80" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "232,548,  224.5,508,  239.5,508" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "357,548,  350.5,508,  365.5,508" stroke="white" stroke-width="0.1" fill="white"/>
+
+        <polygon points = "560,231,  510,223.5,  510,238.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "560,358,  510,350.5,  510,365.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "20,231,  80,223.5,  80,238.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "20,358,  80,350.5,  80,365.5" stroke="white" stroke-width="0.1" fill="white"/>
+    </svg>
+    <button class="play_again" onclick="play_again_clicked()">Play Again</button>
+</body>
+<script>
+    let x_turn = true
+    let o_turn = false
+    let board = Array(9).fill(null)
+    let winning_combn = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+    ]
+    let isWin = false
+    let isDraw = false
+
+    function cell_clicked(cell) {
+        if(x_turn) {
+            //To prevent Overwriting
+            if (cell.querySelector('svg')) {
+                return;
+            }
+            if (cell.textContent == '') {
+                //cell.textContent ='X'
+                //cell.style.color = 'white'
+
+                // parseInt converts string to number
+                
+                const x_svg = document.createElement('div')
+                x_svg.innerHTML = 
+                // viewBox -> x coordinate of left top, y coordinate of right top, width, height
+                `
+                <svg class='x_mark' viewBox= "0 0 100 100"> 
+                    <line x1 = "20" y1="20" x2 = "70" y2 = "70"/>
+                    <line x1 = "70" y1="20" x2= "20" y2="70"/>
+                </svg>
+                `;
+
+                /* Adding the above thing, the HTML looks like this:
+                <div class="cell">
+                    <div>
+                        <svg class="x_mark">...</svg>
+                    </div>
+                </div> */
+
+                cell.appendChild(x_svg)
+                cell.classList.remove('no_element')
+                x_turn = false
+                o_turn = true
+
+                const index = parseInt(cell.dataset.cellIndex)-1
+                board[index] = 'x'
+                check_win('x')
+
+                if(isWin) {
+                    document.querySelectorAll('.cell.no_element').forEach(c => {
+                        c.classList.remove('x_turn')
+                        document.querySelector('.player_turn').innerHTML = `Player X Wins!`;
+                    })
+                }
+                if(!isWin && !isDraw) {
+                    document.body.style.backgroundColor ='#0a001a'; //Red Shade
+                    document.querySelector('.player_turn').innerHTML = `Player O's Turn`;
+
+                    //Update hover state for remaning empty cells
+                    document.querySelectorAll('.cell.no_element').forEach(c => {
+                        c.classList.remove('x_turn')
+                        c.classList.add('o_turn')
+                    })
+            }
+            }
+        }
+        if(o_turn) {
+            // To prevent Overwriting
+            if (cell.querySelector('svg')) {
+                return;
+            }
+            if (cell.textContent == '') {
+                //cell.textContent ='O'
+                //cell.style.color = 'blue'
+
+                const o_svg = document.createElement('div')
+                o_svg.innerHTML = `
+                <svg class="o_mark" viewBox = "0 0 100 100">
+                    <circle cx = "55" cy="50" r = "30"/>
+                </svg>
+                `;
+
+                cell.appendChild(o_svg)
+                cell.classList.remove('no_element')
+                x_turn = true
+                o_turn = false
+
+                const index = parseInt(cell.dataset.cellIndex) - 1
+                board[index] = 'o'
+                check_win('o')
+
+                if(isWin) {
+                    document.querySelectorAll('.cell.no_element').forEach(c => {
+                        c.classList.remove('o_turn')
+                        document.querySelector('.player_turn').innerHTML = `Player O Wins!`;
+
+                    })
+                }
+
+                if(!isWin && !isDraw) {
+                    document.body.style.backgroundColor = '#1a0000' ; // Blue Shade
+                    document.querySelector('.player_turn').innerHTML = `Player X's Turn`;
+
+                    document.querySelectorAll('.cell.no_element').forEach( c => {
+                        c.classList.remove('o_turn')
+                        c.classList.add('x_turn')
+                    })
+                }
+            }
+        }
+    
+    }
+    function check_win(element) {
+        for (let combn of winning_combn) {
+            const [a,b,c] = combn
+            if((board[a] === board[b] && board[a]===board[c]) && (board[a] === 'x' || board[a] === 'o')) {
+                console.log(`${board[a]} Wins!`)
+                x_turn = false
+                o_turn = false
+                isWin = true
+                // It is to handle the win for x and there is cells empty cells.
+                document.querySelector('.player_turn').innerHTML = `Player X Wins!`;
+
+                setTimeout(() =>winning_line(combn),1000)
+
+                const restart_button = document.querySelector('.play_again')
+                setTimeout(() => {
+                    restart_button.style.display = 'block';
+                },1500);
+
+                
+            }
+        }
+        if (!board.includes(null) && !isWin) {
+            document.querySelector('.player_turn').innerHTML = `It's a Draw!`;
+            console.log("Draw")
+            isDraw = true
+
+            const restart_button = document.querySelector('.play_again')
+            setTimeout(() => {
+                restart_button.style.display = 'block';
+            },1500);
+        }
+    }
+    function play_again_clicked() {
+        x_turn = true
+        o_turn = false
+        isWin = false
+        isDraw = false
+        board = Array(9).fill(null)
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            const svg_element = cell.querySelector('div')
+            if(svg_element) {
+                cell.removeChild(svg_element)
+            }
+            cell.classList.add('no_element', 'x_turn')
+            cell.classList.remove('o_turn')
+        })
+
+        const line = document.querySelector('.winning_line')
+        if (line) {
+            line.classList.remove('active')
+            // Even though some styling like rotation, width is given in style tag or separate JS file, these style r considered as inline styling.
+            // Thats y we have to remove.
+            line.style.cssText = ''
+        }
+        document.querySelector('.play_again').style.display = 'none';
+
+        document.querySelector('.player_turn').innerHTML = "Player X's Turn"
+        document.body.style.backgroundColor = '#1a0000';
+    }
+
+    function winning_line(combn) {
+        const line = document.querySelector('.winning_line');
+
+        switch(combn.join(',')) {
+        // Horizontal Lines
+        case '0,1,2':
+            line.style.top = '150px';
+            line.style.left = '20px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(0deg)';
+            break;
+
+        case '3,4,5':
+            line.style.top = '275px';
+            line.style.left = '20px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(0deg)';
+            break;
+
+        case '6,7,8':
+            line.style.top = '410px';
+            line.style.left = '20px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(0deg)';
+            break;
+
+        // Vertical Lines
+        case '0,3,6':
+            line.style.top = '50px';
+            line.style.left = '115px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(90deg)';
+            break;
+
+        case '1,4,7':
+            line.style.top = '50px';
+            line.style.left = '245px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(90deg)';
+            break;
+
+        case '2,5,8':
+            line.style.top = '50px';
+            line.style.left = '375px';
+            line.style.width = '450px';
+            line.style.transform = 'rotate(90deg)';
+            break;
+
+        // Diagonals
+        case '0,4,8': 
+            line.style.top = '95px';
+            line.style.left = '60px';
+            line.style.width = '550px';
+            line.style.transform = 'rotate(45deg)';
+            break;
+        case '2,4,6':
+            line.style.top = '85px';
+            line.style.left = '437px';
+            line.style.width = '550px';
+            line.style.transform = 'rotate(135deg)';
+            break;
+        }
+
+
+    }
+
+
+
+</script>
+</html>
