@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>2 Players Game</title>
+    <link rel="stylesheet" href="2_players.css">
+</head>
+<body>
+    <div class="particles">
+        <!-- 17 particles -->
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <p class="player_turn">Player X's Turn</p>
+    
+    <div class="game_container">
+        <div class="winning_line"></div>
+        <div class="game_grid">
+            <div class="cell no_element x_turn" data-cell-index="1" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="2" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="3" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="4" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="5" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="6" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="7" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="8" onclick="cell_clicked(this)"></div>
+            <div class="cell no_element x_turn" data-cell-index="9" onclick="cell_clicked(this)"></div>
+        </div>
+    </div>
+
+    <svg width="600" height="600">
+        <!-- line: x1,y1: Start of the line; x2,y2: End of the line -->
+        <line x1="80" y1="231" x2="510" y2="231" stroke="white" stroke-width="15" />
+        <line x1="80" y1="358" x2="510" y2="358" stroke="white" stroke-width="15" />
+        <line x1="232" y1="80" x2="232" y2="508" stroke="white" stroke-width="15" />
+        <line x1="358" y1="80" x2="358" y2="508" stroke="white" stroke-width="15" />
+
+        <!-- triangle is constructed using polygon: points: x1,y1, x2,y2, x3,y3
+        x1,y1 -> Top Vertex; x2,y2 -> Bottom Left Vertex; x3,y3 -> Bottom Right Vertex -->
+        <polygon points = "232,40,  224.5,80,  239.5,80" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "357,40,  350.5,80,  365.5,80" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "232,548,  224.5,508,  239.5,508" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "357,548,  350.5,508,  365.5,508" stroke="white" stroke-width="0.1" fill="white"/>
+
+        <polygon points = "560,231,  510,223.5,  510,238.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "560,358,  510,350.5,  510,365.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "20,231,  80,223.5,  80,238.5" stroke="white" stroke-width="0.1" fill="white"/>
+        <polygon points = "20,358,  80,350.5,  80,365.5" stroke="white" stroke-width="0.1" fill="white"/>
+    </svg>
+    <button class="play_again" onclick="play_again_clicked()">Play Again</button>
+</body>
+<script src="2_players.js"></script>
+</html>
